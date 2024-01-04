@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import javax.annotation.security.*;
 import org.example.dto.ProjectDTO;
 import org.example.dto.TaskDTO;
 import org.example.entity.ResponseWrapper;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
