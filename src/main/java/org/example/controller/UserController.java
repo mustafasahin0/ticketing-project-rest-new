@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.UserDTO;
 import org.example.entity.ResponseWrapper;
 import org.example.service.UserService;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
+@Tag(name = "UserController", description = "User API")
 public class UserController {
     private final UserService userService;
 
@@ -21,6 +24,7 @@ public class UserController {
 
     @GetMapping
     @RolesAllowed("Admin")
+    @Operation(summary = "Get Users")
     public ResponseEntity<ResponseWrapper> getUsers() {
         List<UserDTO> userDTOList = userService.listAllUsers();
 
@@ -29,6 +33,7 @@ public class UserController {
 
     @GetMapping("/{userName}")
     @RolesAllowed("Admin")
+    @Operation(summary = "Get User By Username")
     public ResponseEntity<ResponseWrapper> getUserByUserName(@PathVariable("userName") String userName) {
 
         UserDTO userDTO = userService.findByUserName(userName);
@@ -38,6 +43,7 @@ public class UserController {
 
     @PostMapping
     @RolesAllowed("Admin")
+    @Operation(summary = "Create User")
     public ResponseEntity<ResponseWrapper> createUser(@RequestBody UserDTO userDTO) {
         userService.save(userDTO);
 
@@ -46,6 +52,7 @@ public class UserController {
 
     @PutMapping()
     @RolesAllowed("Admin")
+    @Operation(summary = "Update User")
     public ResponseEntity<ResponseWrapper> updateUser(@RequestBody UserDTO userDTO) {
         userService.update(userDTO);
 
@@ -54,6 +61,7 @@ public class UserController {
 
     @DeleteMapping("/{userName}")
     @RolesAllowed("Admin")
+    @Operation(summary = "Delete User")
     public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("userName") String userName) {
         userService.deleteByUserName(userName);
 
