@@ -3,6 +3,7 @@ package org.example.service.impl;
 
 import org.example.dto.ProjectDTO;
 import org.example.dto.TaskDTO;
+import org.example.dto.UserDTO;
 import org.example.entity.Task;
 import org.example.entity.User;
 import org.example.enums.Status;
@@ -11,6 +12,9 @@ import org.example.mapper.TaskMapper;
 import org.example.repository.TaskRepository;
 import org.example.repository.UserRepository;
 import org.example.service.TaskService;
+import org.keycloak.adapters.springsecurity.account.SimpleKeycloakAccount;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,6 +30,7 @@ public class TaskServiceImpl implements TaskService {
     private final ProjectMapper projectMapper;
     private final UserRepository userRepository;
 
+
     public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, ProjectMapper projectMapper, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
@@ -37,10 +42,10 @@ public class TaskServiceImpl implements TaskService {
     public TaskDTO findById(Long id) {
 
         Optional<Task> task = taskRepository.findById(id);
-        if(task.isPresent()){
+        if (task.isPresent()) {
             return taskMapper.convertToDTO(task.get());
         }
-        return null ;
+        return null;
     }
 
     @Override
@@ -62,7 +67,7 @@ public class TaskServiceImpl implements TaskService {
         Optional<Task> task = taskRepository.findById(dto.getId());
         Task convertedTask = taskMapper.convertToEntity(dto);
 
-        if(task.isPresent()){
+        if (task.isPresent()) {
             convertedTask.setId(task.get().getId());
             convertedTask.setTaskStatus(dto.getTaskStatus() == null ? task.get().getTaskStatus() : dto.getTaskStatus());
             convertedTask.setAssignedDate(task.get().getAssignedDate());
@@ -76,7 +81,7 @@ public class TaskServiceImpl implements TaskService {
 
         Optional<Task> foundTask = taskRepository.findById(id);
 
-        if(foundTask.isPresent()){
+        if (foundTask.isPresent()) {
             foundTask.get().setIsDeleted(true);
             taskRepository.save(foundTask.get());
         }
@@ -112,7 +117,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDTO> listAllTasksByStatusIsNot(Status status) {
 
-        User loggedInUser = userRepository.findByUserName("john@employee.com");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SimpleKeycloakAccount details = (SimpleKeycloakAccount) authentication.getDetails();
+        String username = details.getKeycloakSecurityContext().getToken().getPreferredUsername();
+
+        User loggedInUser = userRepository.findByUserName(username);
 
         List<Task> list = taskRepository.findAllByTaskStatusIsNotAndAssignedEmployee(status, loggedInUser);
         return list.stream().map(taskMapper::convertToDTO).collect(Collectors.toList());
