@@ -2,8 +2,10 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.annotation.DefaultExceptionMessage;
 import org.example.dto.UserDTO;
 import org.example.entity.ResponseWrapper;
+import org.example.exception.TicketingProjectException;
 import org.example.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,8 +64,9 @@ public class UserController {
     @DeleteMapping("/{userName}")
     @RolesAllowed("Admin")
     @Operation(summary = "Delete User")
-    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("userName") String userName) {
-        userService.deleteByUserName(userName);
+    @DefaultExceptionMessage(defaultMessage = "Failed to delete user.")
+    public ResponseEntity<ResponseWrapper> deleteUser(@PathVariable("userName") String userName) throws TicketingProjectException {
+        userService.delete(userName);
 
         return ResponseEntity.ok(new ResponseWrapper("User is successfully deleted", HttpStatus.OK));
 
