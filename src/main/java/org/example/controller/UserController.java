@@ -3,6 +3,7 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.annotation.DefaultExceptionMessage;
+import org.example.annotation.ExecutionTime;
 import org.example.dto.UserDTO;
 import org.example.entity.ResponseWrapper;
 import org.example.exception.TicketingProjectException;
@@ -24,6 +25,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ExecutionTime
     @GetMapping
     @RolesAllowed("Admin")
     @Operation(summary = "Get Users")
@@ -33,6 +35,7 @@ public class UserController {
         return ResponseEntity.ok(new ResponseWrapper("Users are successfully retrieved", userDTOList, HttpStatus.OK));
     }
 
+    @ExecutionTime
     @GetMapping("/{userName}")
     @RolesAllowed("Admin")
     @Operation(summary = "Get User By Username")
