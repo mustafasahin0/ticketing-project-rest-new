@@ -1,9 +1,8 @@
 package org.example.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.checkerframework.checker.units.qual.A;
 import org.example.enums.Status;
 
 import java.time.LocalDate;
@@ -11,6 +10,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class ProjectDTO {
 
     private Long id;
