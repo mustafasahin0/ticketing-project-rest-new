@@ -29,8 +29,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceUnitTest {
@@ -130,5 +131,16 @@ public class UserServiceUnitTest {
         assertEquals("User Not Found!", throwable.getMessage());
 
 
+    }
+
+    @Test
+    void should_save_user() {
+        when(passwordEncoder.encode(anyString())).thenReturn("anyPassword");
+        when(userRepository.save(any())).thenReturn(user);
+        UserDTO actualDTO = userService.save(userDTO);
+
+        // verify that keycloakService.userCreate method is called 1 time.
+        verify(keycloakService).userCreate(any());
+        assertThat(actualDTO).usingRecursiveComparison().isEqualTo(userDTO);
     }
 }
