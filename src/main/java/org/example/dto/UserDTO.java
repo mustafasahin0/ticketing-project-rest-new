@@ -11,6 +11,7 @@ import org.example.enums.Gender;
 @Setter
 @Builder
 @AllArgsConstructor
+@ToString
 public class UserDTO {
 
     private Long id;
