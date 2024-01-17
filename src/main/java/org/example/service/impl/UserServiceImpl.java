@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findByUserName(String username) {
         User user = userRepository.findByUserNameAndIsDeleted(username,false);
+        if(user == null) throw new NoSuchElementException("User Not Found!");
         return userMapper.convertToDTO(user);
     }
 
